@@ -1,2 +1,2 @@
 # rgwv1
-esis backend
+roundgis smart irrigation/lighting backend
