@@ -279,13 +279,15 @@ class SysCfg:
 
     @classmethod
     async def GetElasticEmailInfo(cls):
-        tbl = await cls.Get(['select * from rgw_sys_cfg where key in (?,?,?)',
-                             ('elasticemail_api_key', 'elasticemail_send_url', 'email_sender')])
-        if len(tbl) == 3 and len(tbl['elasticemail_api_key']) > 0 \
-                and len(tbl['elasticemail_send_url']) > 0 and len(tbl['email_sender']) > 0:
+        tbl = await cls.Get(['select * from rgw_sys_cfg where key in (?,?,?,?)',
+                             ('elasticemail_api_key', 'elasticemail_send_url', 'email_sender', 'email_recipient')])
+        if len(tbl) == 4 and len(tbl['elasticemail_api_key']) > 0 \
+                and len(tbl['elasticemail_send_url']) > 0 and len(tbl['email_sender']) > 0 and \
+                len(tbl['email_recipient']) > 0:
             return {'api_key': tbl['elasticemail_api_key'],
                     'url': tbl['elasticemail_send_url'],
-                    'sender': tbl['email_sender']}
+                    'sender': tbl['email_sender'],
+                    'recipient': tbl['email_recipient']}
         else:
             return None
 
@@ -356,10 +358,9 @@ class SensorTrigger:
     async def Query(cls, sql_row):
         """
         :param sql_row: [sql, args]
-        :return: models.ConditionalRelaySwitchAction objs
+        :return: models.SensorTrigger objs
         """
-        rows = await BizDB.Query(sql_row)
-        return [models.SensorTrigger.FromRow(r) for r in rows]
+        return await BizDB.Query(sql_row)
 
     @classmethod
     def SetCheckInterval(cls, mdl):

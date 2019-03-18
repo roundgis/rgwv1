@@ -109,10 +109,10 @@ async def ScanSwitch():
 
 async def SendEmail(trigger_mdl):
     tbl = await api_core.SysCfg.GetElasticEmailInfo()
-    if tbl and len(trigger_mdl['emails']) > 0 and len(trigger_mdl['message']) > 0:
+    if tbl and len(trigger_mdl['message']) > 0:
         await api_core.ElasticEmail.SendEmail(tbl['url'],
                                               tbl['api_key'],
                                               tbl['sender'],
-                                              trigger_mdl['emails'],
+                                              tbl['recipient'],
                                               trigger_mdl['message'],
                                               trigger_mdl['message'], 10)

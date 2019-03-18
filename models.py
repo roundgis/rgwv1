@@ -438,7 +438,7 @@ class SwitchOpDuration:
 
 class SysCfg:
     KEYS = ['timezone', 'pagekite_path', 'pagekite_frontend', 'domain', 'pagekite_pwd',
-            'pwd', 'gw_url', 'email_sender',
+            'pwd', 'gw_url', 'email_sender', 'email_recipient',
             'elasticemail_api_key', 'elasticemail_send_url']
 
     TBL = "rgw_sys_cfg"
@@ -711,7 +711,6 @@ class SensorTrigger:
         {'name': 'start_ts', 'type': 'integer not null default 0'},
         {'name': 'stop_ts', 'type': 'integer not null default 0'},
         {'name': 'check_interval', 'type': 'integer not null default 30'},
-        {'name': 'emails', 'type': "text not null default '[]'"},
         {'name': 'message', 'type': "text not null default ''"}
     ]
 
@@ -807,10 +806,7 @@ class SensorTrigger:
         for key in rec_tbl:
             terms.append(key)
             marks.append("?")
-            if key == 'emails':
-                args.append(json.dumps(rec_tbl[key]))
-            else:
-                args.append(rec_tbl[key])
+            args.append(rec_tbl[key])
         if ignored:
             insert_sql = "insert or ignore into rgw_sensor_trigger("
         else:
@@ -840,12 +836,6 @@ class SensorTrigger:
             except ValueError:
                 sql_args.append(term[2])
         return sql, sql_args
-
-    @classmethod
-    def FromRow(cls, row):
-        if 'emails' in row:
-            row['emails'] = json.loads(row['emails'])
-        return row
 
 
 class XYDevice:

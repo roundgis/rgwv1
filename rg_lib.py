@@ -161,7 +161,7 @@ class Cyclone:
 
     @classmethod
     def ToTplVal(cls, val):
-        return val if val is not None else u"null"
+        return val if val is not None else "null"
 
     @classmethod
     def Dir2Url(cls, dir_name):
@@ -235,7 +235,7 @@ class Sqlite:
     def CreateTable(cls, table_name, fields, extra_arg=''):
         sql = "CREATE TABLE IF NOT EXISTS {0}".format(table_name)
         sql += '('
-        field_str = ',\n'.join([u"{0} {1}".format(i['name'], i['type']) for i in fields])
+        field_str = ',\n'.join(["{0} {1}".format(i['name'], i['type']) for i in fields])
         sql += field_str
         if len(extra_arg) > 0:
             sql += ',\n' + extra_arg
