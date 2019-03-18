@@ -113,6 +113,6 @@ async def SendEmail(trigger_mdl):
         await api_core.ElasticEmail.SendEmail(tbl['url'],
                                               tbl['api_key'],
                                               tbl['sender'],
-                                              tbl['recipient'],
+                                              [tbl['recipient']],
                                               trigger_mdl['message'],
                                               trigger_mdl['message'], 10)
