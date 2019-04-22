@@ -509,14 +509,14 @@ class AppEm(UIBase):
                       'set_cond_action_view': '设置条件触发',
                       'monthly_switch_usage_view': "开关月统计",
                       'goto': '环境数据',
-                      'name': '名字', 'status': '状态', 'remaining': '剩余开启时长'},
+                      'name': '名字', 'status': '状态', 'remaining': '剩余时长'},
             "zh-tw": {"open": "打開", "close": "關閉", "open_duration_desc": "15-99999秒",
                       'set_schedule': "设置排程",
                       'switch_schedule_view': "查看排程",
                       'set_cond_action_view': '設置條件觸發',
                       'monthly_switch_usage_view': "開關月統計",
                       'goto': '環境數據',
-                      'name': '名字', 'status': '狀態', 'remaining': '剩餘開啟時長'}
+                      'name': '名字', 'status': '狀態', 'remaining': '剩餘時長'}
         }
 
     async def handlePage_(self):
