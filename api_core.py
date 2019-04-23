@@ -39,6 +39,8 @@ class BizDB:
             models.Switch.Init(conn_obj)
             models.SwitchSchedule.Init(conn_obj)
             models.SwitchAction.Init(conn_obj)
+            models.ZbDevice.Init(conn_obj)
+            models.ZbModule.Init(conn_obj)
 
         cls.db_pool = rg_lib.Sqlite.MakeConnPool(settings.BIZ_DB['path'])
         cls.redis_conn = txredisapi.lazyConnectionPool(host=settings.REDIS['host'],
@@ -80,6 +82,7 @@ class LogDB:
             models.SwitchOpDuration.Init(conn_obj)
             models.TriggerLog.Init(conn_obj)
             models.SensorAvgData.Init(conn_obj)
+            models.DeviceOpLog.Init(conn_obj)
 
         cls.db_pool = rg_lib.Sqlite.MakeConnPool(settings.LOG_DB['path'])
         return cls.db_pool.runWithConnection(helper)

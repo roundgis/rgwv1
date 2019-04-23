@@ -81,11 +81,11 @@ class ZbDevice:
 
     @classmethod
     async def Remove(cls, deviceids):
-        return await cls.Req('RemoveDevice', [{'deviceids': deviceids}], len(deviceids)*10+1)
+        return await cls.Req('RemoveDevice', [{'deviceids': deviceids}], len(deviceids) * 10 + 1)
 
     @classmethod
     async def Reset(cls, deviceids):
-        return await cls.Req('ResetDevice', [{'deviceids': deviceids}], len(deviceids)*10+1)
+        return await cls.Req('ResetDevice', [{'deviceids': deviceids}], len(deviceids) * 10 + 1)
 
     @classmethod
     async def Search(cls, arg):
@@ -108,7 +108,7 @@ class ZbDevice:
 
     @classmethod
     async def Reboot(cls, deviceids):
-        return await cls.Req('RebootDevice', [{'deviceids': deviceids}], len(deviceids)*3+1)
+        return await cls.Req('RebootDevice', [{'deviceids': deviceids}], len(deviceids) * 3 + 1)
 
 
 class EM:
@@ -164,8 +164,60 @@ class EM:
         :return: device
         """
         dev = await cls.Req('CloseSwitch',
-                          [{
-                              "arg": {'deviceid': switchid}
-                          }], 100)
+                            [{
+                                "arg": {'deviceid': switchid}
+                            }], 100)
         res = dev if (models.XYDevice.ValsNotEmpty(dev) and dev['vals'][0] == models.SwitchAction.OFF) else None
         return res
+
+
+class XY:
+    @classmethod
+    async def Req(cls, method, params, timeout):
+        return await Req('api/xy', method, params, timeout)
+
+    @classmethod
+    async def GetSwitchStatus(cls, moduleid, nid):
+        return await cls.Req('GetSwitchStatus',
+                             [{
+                                 'arg': {"moduleid": moduleid, "nid": nid}
+                               }], 10)
+
+    @classmethod
+    async def Set(cls, device_mdl):
+        return await cls.Req('SetDevice', [{'device': device_mdl}], 10)
+
+    @classmethod
+    async def Get(cls, deviceid):
+        return await cls.Req('GetDevice', [{'deviceid': deviceid}], 10)
+
+    @classmethod
+    async def Remove(cls, deviceids):
+        return await cls.Req('RemoveDevice', [{'deviceids': deviceids}], len(deviceids) * 10 + 1)
+
+    @classmethod
+    async def Reset(cls, deviceids):
+        return await cls.Req('ResetDevice', [{'deviceids': deviceids}], len(deviceids) * 10 + 1)
+
+    @classmethod
+    async def Search(cls, arg):
+        return await cls.Req('SearchDevice', [arg], 10)
+
+    @classmethod
+    async def GetOpLog(cls, deviceid, start_ts, stop_ts):
+        return await cls.Req('GetDeviceOpLog', [{'deviceid': deviceid,
+                                                 'start_ts': start_ts,
+                                                 'stop_ts': stop_ts}], 10)
+
+    @classmethod
+    async def GetOpErrorCount(cls, start_ts, stop_ts):
+        return await cls.Req('GetDeviceOpErrorCount', [{'start_ts': start_ts,
+                                                        'stop_ts': stop_ts}], 10)
+
+    @classmethod
+    async def GetNId(cls, deviceid, moduleid):
+        return await cls.Req('GetDeviceNId', [{'deviceid': deviceid, 'moduleid': moduleid}], 20)
+
+    @classmethod
+    async def Reboot(cls, deviceids):
+        return await cls.Req('RebootDevice', [{'deviceids': deviceids}], len(deviceids) * 3 + 1)
