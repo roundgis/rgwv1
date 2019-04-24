@@ -76,7 +76,7 @@ async def Get(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_zb_device.Get(para['deviceid'])
+        return await __GetDevice(para['deviceid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
