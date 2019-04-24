@@ -4,7 +4,7 @@ import rgw_consts
 import api_core
 import api_sensor_data
 import api_switch_action
-import api_rxg
+import api_zb_device
 import models
 
 
@@ -15,7 +15,7 @@ def ListSensor():
                         r1.val_offset val_offset,
                         r1.data_no data_no,
                          COALESCE(r1.func_body,'') func_body
-                  from rgw_sensor r1"""
+                  from rgw_sensor r1 where r1.deviceid in (select id from rgw_zb_device where nid > 0)"""
     return api_core.BizDB.Query([sql_str, []])
 
 
@@ -23,8 +23,7 @@ async def ScanSensor():
     try:
         ready_sensors = []
         sensors = await ListSensor()
-        sensorids = [s['id'] for s in sensors]
-        devs = await api_rxg.EM.GetSensorVal(sensorids)
+        devs = await api_zb_device.GetVal([s['deviceid'] for s in sensors])
         curr_ts = rg_lib.DateTime.ts()
         dev_tbl = {i['id']: i for i in devs}
         for sensor in sensors:

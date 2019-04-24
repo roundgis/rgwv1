@@ -134,7 +134,7 @@ async def SetSwitchStatus(device_mdl, turn_on):
 
 
 async def OpSwitch(deviceid, on_off):
-    dev = await Get(["select * from rgw_zb_device where id=?",
+    dev = await Get(["select id,moduleid,nid from rgw_zb_device where id=?",
                      (deviceid,)])
     await SetSwitchStatus(dev, on_off)
     return dev
