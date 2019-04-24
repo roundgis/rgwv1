@@ -15,7 +15,7 @@ async def ListModule(req_handler, arg):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
-        return await api_zb_device.Module.List(arg['list_no'])
+        return await api_zb_device.Module.List(arg)
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
