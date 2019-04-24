@@ -83,7 +83,7 @@ def Search(para):
         sql_str = """select r1.* from rgw_zb_device r1 where r1.id like ? limit ?"""
     else:
         raise rg_lib.RGError(models.ErrorTypes.UnsupportedOp())
-    sql_args = ("{0}%".format(para['val']), rgw_consts.DbConsts.SEARCH_LIMIT)
+    sql_args = ("%{0}%".format(para['val']), rgw_consts.DbConsts.SEARCH_LIMIT)
     return api_core.BizDB.Query([sql_str, sql_args])
 
 

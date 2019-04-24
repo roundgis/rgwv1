@@ -846,16 +846,6 @@ class SensorTrigger:
         return sql, sql_args
 
 
-class XYDevice:
-    @classmethod
-    def HasVals(cls, mdl):
-        return (mdl is not None) and isinstance(mdl.get('vals', None), list)
-
-    @classmethod
-    def ValsNotEmpty(cls, mdl):
-        return cls.HasVals(mdl) and len(mdl['vals']) > 0
-
-
 class TriggerLog:
     FIELDS = ['cts', 'triggerid', 'message']
 
