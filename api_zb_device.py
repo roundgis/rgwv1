@@ -278,7 +278,7 @@ class Module:
         await cls.Upsert(models.ZbModule.Filter(module_tbl))
 
     @classmethod
-    async def Restore(cls, target_moduleid, src_moduleid):
+    async def Restore(cls, src_moduleid, target_moduleid):
         sql_str = "select * from rgw_zb_module where id=?"
         rows = await cls.Query([sql_str, (src_moduleid,)])
         row = rows[0] if len(rows) > 0 else None

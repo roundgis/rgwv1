@@ -6,6 +6,12 @@ import api_core
 import api_zb_device
 
 
+async def __GetDevice(deviceid):
+    return await api_zb_device.Get(["""select r1.* 
+                                       from rgw_zb_device r1 
+                                       where r1.id=?""", (deviceid,)])
+
+
 async def Remove(req_handler, arg):
     """
     :param req_handler: http request
@@ -15,7 +21,8 @@ async def Remove(req_handler, arg):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
-        return await api_zb_device.Remove(arg['deviceids'])
+        await api_zb_device.Remove(arg['deviceids'])
+        return "ok"
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -29,7 +36,8 @@ async def Reset(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_zb_device.Reset(para['deviceids'])
+        await api_zb_device.Reset(para['deviceids'])
+        return "ok"
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -38,7 +46,7 @@ async def Add(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_zb_device.Add(para['device'])
+        return await __GetDevice(await api_zb_device.Add(para['device']))
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -53,7 +61,7 @@ async def Set(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_zb_device.Set(para['device'])
+        return await __GetDevice(await api_zb_device.Update(para['device']))
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -146,6 +154,7 @@ async def Reboot(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_zb_device.Reboot(para['deviceids'])
+        await api_zb_device.Reboot(para['deviceids'])
+        return "ok"
     except Exception:
         rg_lib.Cyclone.HandleErrInException()

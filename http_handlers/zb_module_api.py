@@ -85,7 +85,8 @@ async def RebootModule(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.XY.RebootModule(para['moduleid'])
+        await api_rxg.XY.RebootModule(para['moduleid'])
+        return "ok"
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -99,7 +100,8 @@ async def RebootAll(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.XY.RebootAll()
+        await api_rxg.XY.RebootAll()
+        return "ok"
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
