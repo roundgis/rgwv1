@@ -1,6 +1,6 @@
 import rg_lib
 import api_core
-import api_xy_device
+import auto_gen_sensor_switch
 import api_req_limit
 import api_auth
 
@@ -90,7 +90,7 @@ async def SyncSensor(req_handler, arg):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
-        await api_xy_device.SyncSensor()
+        await auto_gen_sensor_switch.SyncSensor()
         return "ok"
     except Exception:
         rg_lib.Cyclone.HandleErrInException()

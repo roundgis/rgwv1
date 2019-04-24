@@ -3,7 +3,7 @@ from twisted.python import log
 import rg_lib
 import api_core
 import api_req_limit
-import api_xy_device
+import auto_gen_sensor_switch
 import api_auth
 import settings
 
@@ -68,7 +68,7 @@ async def RegisterDevice(req_handler, arg):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
-        devs = await api_xy_device.ProbeAndSync()
+        devs = await auto_gen_sensor_switch.ProbeAndSync()
         return devs
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
@@ -78,8 +78,8 @@ async def SyncDevice(req_handler, arg):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
-        await api_xy_device.SyncSwitch()
-        await api_xy_device.SyncSensor()
+        await auto_gen_sensor_switch.SyncSwitch()
+        await auto_gen_sensor_switch.SyncSensor()
         return "ok"
     except Exception:
         rg_lib.Cyclone.HandleErrInException()

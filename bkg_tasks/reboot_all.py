@@ -4,6 +4,6 @@ import api_rxg
 
 async def Run():
     try:
-        await api_rxg.ZbModule.RebootAll()
+        await api_rxg.XY.RebootAll()
     except Exception as e:
         log.err()

@@ -29,6 +29,14 @@ class ErrorTypes:
     def UnsupportedOp(cls):
         return rg_lib.ErrorType.DeclaredType("UnsupportedOp")
 
+    @classmethod
+    def InvalidNetworkId(cls):
+        return rg_lib.ErrorType.DeclaredType("InvalidNetworkId")
+
+    @classmethod
+    def NoZbMoudle(cls):
+        return rg_lib.ErrorType.DeclaredType("NoZbModule")
+
 
 class UserSession:
     @classmethod
@@ -955,7 +963,7 @@ class ZbDevice:
         {'name': 'name', 'type': 'varchar(64) not null'},
         {'name': 'cts', 'type': 'datetime not null'},
         {'name': 'device_no', 'type': 'varchar(64) not null'},
-        {'name': 'remark', 'type': 'text'}
+        {'name': 'remark', 'type': "text not null default ''"}
     ]
 
     IDX1 = """

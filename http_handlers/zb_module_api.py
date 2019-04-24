@@ -3,6 +3,7 @@ import rg_lib
 import api_req_limit
 import api_auth
 import api_rxg
+import api_zb_device
 
 
 async def ListModule(req_handler, arg):
@@ -14,7 +15,7 @@ async def ListModule(req_handler, arg):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
-        return await api_rxg.ZbModule.ListModule(arg['list_no'])
+        return await api_zb_device.Module.List(arg['list_no'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -28,7 +29,7 @@ async def ProbeDevice(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbModule.ProbeDevice(para['moduleid'])
+        return await api_zb_device.Module.ProbeDevice(para['moduleid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -37,7 +38,8 @@ async def ResetModule(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbModule.ResetModule(para['moduleid'])
+        await api_rxg.XY.ClearModule(para['moduleid'])
+        return await api_rxg.XY.RebootModule(para['moduleid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -52,7 +54,7 @@ async def BackupModule(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbModule.BackupModule(para['moduleid'])
+        return await api_zb_device.Module.Backup(para['moduleid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -67,8 +69,8 @@ async def RestoreModule(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbModule.RestoreModule(para['src_moduleid'],
-                                                    para['target_moduleid'])
+        return await api_zb_device.Module.Restore(para['src_moduleid'],
+                                                  para['target_moduleid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -83,7 +85,7 @@ async def RebootModule(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbModule.RebootModule(para['moduleid'])
+        return await api_rxg.XY.RebootModule(para['moduleid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -97,7 +99,7 @@ async def RebootAll(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbModule.RebootAll()
+        return await api_rxg.XY.RebootAll()
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 

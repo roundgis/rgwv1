@@ -2,7 +2,8 @@ from twisted.python import log
 import rg_lib
 import api_req_limit
 import api_auth
-import api_rxg
+import api_core
+import api_zb_device
 
 
 async def Remove(req_handler, arg):
@@ -14,7 +15,7 @@ async def Remove(req_handler, arg):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
-        return await api_rxg.ZbDevice.Remove(arg['deviceids'])
+        return await api_zb_device.Remove(arg['deviceids'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -28,7 +29,7 @@ async def Reset(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.Reset(para['deviceids'])
+        return await api_zb_device.Reset(para['deviceids'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -37,7 +38,7 @@ async def Add(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.Add(para['device'])
+        return await api_zb_device.Add(para['device'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -52,7 +53,7 @@ async def Set(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.Set(para['device'])
+        return await api_zb_device.Set(para['device'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -67,7 +68,7 @@ async def Get(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.Get(para['deviceid'])
+        return await api_zb_device.Get(para['deviceid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -82,7 +83,7 @@ async def Search(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.Search(para['arg'])
+        return await api_zb_device.Search(para['arg'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -96,7 +97,7 @@ async def GetOpLog(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.GetOpLog(para['deviceid'], para['start_ts'], para['stop_ts'])
+        return await api_core.DeviceLog.Get(para['start_ts'], para['stop_ts'], para['deviceid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -110,7 +111,14 @@ async def GetOpErrorCount(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.GetOpErrorCount(para['start_ts'], para['stop_ts'])
+        devs = await api_core.BizDB.Query(["select id, name, device_no from rgw_zb_device", []])
+        devids = [i['id'] for i in devs]
+        devs_tbl = {i['id']: i for i in devs}
+        recs = await api_core.DeviceLog.GetErrorCount(para['start_ts'], para['stop_ts'], devids)
+        for rec in recs:
+            rec['device_no'] = devs_tbl[rec['deviceid']]['device_no']
+            rec['device_name'] = devs_tbl[rec['deviceid']]['name']
+        return recs
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -124,7 +132,7 @@ async def GetNId(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.GetNId(para['deviceid'], para['moduleid'])
+        return await api_zb_device.TryGetNId(para['moduleid'], para['deviceid'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
@@ -138,6 +146,6 @@ async def Reboot(req_handler, para):
     try:
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(para['token'])
-        return await api_rxg.ZbDevice.Reboot(para['deviceids'])
+        return await api_zb_device.Reboot(para['deviceids'])
     except Exception:
         rg_lib.Cyclone.HandleErrInException()

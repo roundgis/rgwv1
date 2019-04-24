@@ -486,4 +486,34 @@ class TriggerLog:
         ])
 
 
+class DeviceLog:
+    @classmethod
+    async def Add(cls, op_logs):
+        if not isinstance(op_logs, list):
+            op_logs = [op_logs]
+        sql_rows = [models.DeviceOpLog.DynInsert(i, True) for i in op_logs]
+        return await LogDB.Interaction(sql_rows)
+
+    @classmethod
+    def Get(cls, start_ts, stop_ts, deviceid, count=10000):
+        sql_str = """select * from rgw_device_op_log r1 
+                      where r1.deviceid =? and cts>=? and cts<? limit {0}""".format(count)
+        sql_args = [deviceid, rg_lib.DateTime.dt2ts(start_ts), rg_lib.DateTime.dt2ts(stop_ts)]
+        return LogDB.Query([sql_str, sql_args])
+
+    @classmethod
+    def GetErrorCount(cls, start_ts, stop_ts, deviceids):
+        sql_str = rg_lib.Sqlite.GenInSql("""select deviceid, count(1) error_count 
+                                            from rgw_device_op_log where deviceid in """,
+                                         deviceids)
+        sql_str += " and cts>=? and cts<? group by deviceid"
+        sql_args = deviceids + [rg_lib.DateTime.dt2ts(start_ts), rg_lib.DateTime.dt2ts(stop_ts)]
+        return LogDB.Query([sql_str, sql_args])
+
+    @classmethod
+    def RemoveTTL(cls, ts_val):
+        return LogDB.Interaction([
+            ["delete from rgw_device_op_log where cts < ?", (ts_val,)]
+        ])
+
 

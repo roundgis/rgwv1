@@ -3,11 +3,12 @@ import api_core
 import api_rxg
 import rg_lib
 import models
+import api_zb_device
 import rgw_consts
 
 
 async def SyncSensor():
-    devs = await api_rxg.EM.ListDevice('sensor')
+    devs = await api_zb_device.List('sensor', False)
     sensors = []
     temp = [d for d in devs if d['device_no'] == rgw_consts.XY_DeviceNo.XY_TEMP_HUMIDITY_SENSOR]
     GenTemperatureHumidity(sensors, temp)
@@ -29,7 +30,7 @@ async def SyncSensor():
 
 
 async def SyncSwitch():
-    devs = await api_rxg.EM.ListDevice('switch')
+    devs = await api_zb_device.List('switch', False)
     switches = []
     GenSwitch(switches, devs)
     sql_rows = []
@@ -131,13 +132,12 @@ def GenCO2(sensors, devices):
 
 
 async def ProbeAndSync():
-    modules = await api_rxg.ZbModule.ListModule('active')
+    modules = await api_rxg.XY.GetModules()
     devs = []
     for module in modules:
-        result = await api_rxg.ZbModule.ProbeDevice(module['id'])
-        log.msg(result)
-        if len(result['devices']) > 0:
+        res = await api_zb_device.Module.ProbeDevice(module['id'])
+        if len(res['devices']) > 0:
             await SyncSensor()
             await SyncSwitch()
-            devs.extend(result['devices'])
+            devs.extend(res['devices'])
     return devs

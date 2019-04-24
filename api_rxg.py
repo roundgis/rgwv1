@@ -177,47 +177,119 @@ class XY:
         return await Req('api/xy', method, params, timeout)
 
     @classmethod
+    async def GetModules(cls):
+        return await cls.Req('GetModules',
+                             [{}], 10)
+
+    @classmethod
+    async def GetModule(cls, moduleid):
+        return await cls.Req('GetModule',
+                             [{'moduleid': moduleid}], 10)
+
+    @classmethod
+    async def ProbeDevice(cls, moduleid):
+        return await cls.Req('ProbeDevice',
+                             [{
+                                 "moduleid": moduleid,
+                             }], 600)
+
+    @classmethod
     async def GetSwitchStatus(cls, moduleid, nid):
         return await cls.Req('GetSwitchStatus',
                              [{
-                                 'arg': {"moduleid": moduleid, "nid": nid}
+                                 "moduleid": moduleid,
+                                 "nid": nid
                                }], 10)
 
     @classmethod
-    async def Set(cls, device_mdl):
-        return await cls.Req('SetDevice', [{'device': device_mdl}], 10)
+    async def SetSwitchStatus(cls, moduleid, nid, on_off):
+        return await cls.Req('SetSwitchStatus',
+                             [{
+                                 "moduleid": moduleid,
+                                 "nid": nid,
+                                 "on_off": on_off
+                             }], 10)
 
     @classmethod
-    async def Get(cls, deviceid):
-        return await cls.Req('GetDevice', [{'deviceid': deviceid}], 10)
+    async def RemoveDevice(cls, moduleid, nid, deviceid):
+        return await cls.Req('RemoveDevice',
+                             [{
+                                 "moduleid": moduleid,
+                                 "nid": nid,
+                                 "deviceid": deviceid
+                             }
+                              ], 100)
 
     @classmethod
-    async def Remove(cls, deviceids):
-        return await cls.Req('RemoveDevice', [{'deviceids': deviceids}], len(deviceids) * 10 + 1)
+    async def GetDeviceNId(cls, moduleid, deviceid):
+        return await cls.Req('GetDeviceNId',
+                             [
+                                 {
+                                     'moduleid': moduleid,
+                                     'deviceid': deviceid
+                                  }], 10)
 
     @classmethod
-    async def Reset(cls, deviceids):
-        return await cls.Req('ResetDevice', [{'deviceids': deviceids}], len(deviceids) * 10 + 1)
+    async def GetTemperatureHumidity(cls, moduleid, nid):
+        return await cls.Req('GetTemperatureHumidity',
+                             [{
+                                 'moduleid': moduleid,
+                                 'nid': nid
+                             }], 10)
 
     @classmethod
-    async def Search(cls, arg):
-        return await cls.Req('SearchDevice', [arg], 10)
+    async def GetLiquidLevel(cls, moduleid, nid):
+        return await cls.Req('GetLiquidLevel',
+                             [{
+                                 'moduleid': moduleid,
+                                 'nid': nid
+                             }], 10)
 
     @classmethod
-    async def GetOpLog(cls, deviceid, start_ts, stop_ts):
-        return await cls.Req('GetDeviceOpLog', [{'deviceid': deviceid,
-                                                 'start_ts': start_ts,
-                                                 'stop_ts': stop_ts}], 10)
+    async def GetSoil3IN1(cls, moduleid, nid):
+        return await cls.Req('GetSoil3IN1',
+                             [{
+                                 'moduleid': moduleid,
+                                 'nid': nid
+                             }], 10)
 
     @classmethod
-    async def GetOpErrorCount(cls, start_ts, stop_ts):
-        return await cls.Req('GetDeviceOpErrorCount', [{'start_ts': start_ts,
-                                                        'stop_ts': stop_ts}], 10)
+    async def GetAnalog(cls, moduleid, nid):
+        return await cls.Req('GetAnalog',
+                             [{
+                                 'moduleid': moduleid,
+                                 'nid': nid
+                             }], 10)
 
     @classmethod
-    async def GetNId(cls, deviceid, moduleid):
-        return await cls.Req('GetDeviceNId', [{'deviceid': deviceid, 'moduleid': moduleid}], 20)
+    async def RebootDevice(cls, moduleid, nid):
+        return await cls.Req('RebootDevice',
+                             [{
+                                 'moduleid': moduleid,
+                                 'nid': nid
+                             }], 10)
 
     @classmethod
-    async def Reboot(cls, deviceids):
-        return await cls.Req('RebootDevice', [{'deviceids': deviceids}], len(deviceids) * 3 + 1)
+    async def RebootModule(cls, moduleid):
+        return await cls.Req('RebootModule',
+                             [{'moduleid': moduleid}], 20)
+
+    @classmethod
+    async def RebootAll(cls):
+        return await cls.Req('RebootAll', [{}], 10)
+
+    @classmethod
+    async def ClearModule(cls, moduleid):
+        return await cls.Req('ClearModule',
+                             [{'moduleid': moduleid}], 20)
+
+    @classmethod
+    async def BackupModule(cls, moduleid):
+        return await cls.Req('BackupModule',
+                             [{'moduleid': moduleid}], 20)
+
+    @classmethod
+    async def RestoreModule(cls, moduleid, backup):
+        return await cls.Req('RestoreModule',
+                             [{'moduleid': moduleid,
+                               'backup': backup}], 30)
