@@ -23,7 +23,7 @@ async def ScanSensor():
     try:
         ready_sensors = []
         sensors = await ListSensor()
-        devs = await api_zb_device.GetVal([s['deviceid'] for s in sensors])
+        devs = await api_zb_device.ReadVals([s['deviceid'] for s in sensors])
         curr_ts = rg_lib.DateTime.ts()
         dev_tbl = {i['id']: i for i in devs}
         for sensor in sensors:

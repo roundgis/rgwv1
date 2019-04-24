@@ -172,7 +172,7 @@ async def Reset(deviceids):
     await ResetNetwork(deviceids)
 
 
-async def GetVal(deviceids):
+async def ReadVals(deviceids):
     sql_str = rg_lib.Sqlite.GenInSql("""select id, nid, name, moduleid,device_no 
                                         from rgw_zb_device where nid > 0 and id in """,
                                      deviceids)
@@ -181,6 +181,16 @@ async def GetVal(deviceids):
     for dev in devs:
         await SyncVal(dev)
     return devs
+
+
+async def ReadVal(deviceid):
+    sql_str = """select id, nid, name, moduleid,device_no 
+                from rgw_zb_device where nid > 0 and id = ? """
+    sql_args = (deviceid,)
+    dev = await api_core.BizDB.Get([sql_str, sql_args])
+    if dev:
+        await SyncVal(dev)
+    return dev
 
 
 async def List(list_no, get_vals):

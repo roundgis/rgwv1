@@ -167,18 +167,18 @@ async def AutoSync():
     switches = await api_core.BizDB.Query([sql_str, []])
     validids = []
     for i in switches:
-        dev_mdls = await api_zb_device.GetVal(i['id'])
-        if len(dev_mdls) > 0:
+        dev_mdl = await api_zb_device.ReadVal(i['id'])
+        if models.ZbDevice.HasVals(dev_mdl):
             validids.append(i['id'])
             try:
                 await Acquire(i['id'])
                 row = await api_core.BizDB.Get([sql_str1, [i['id']]])
                 if row:
                     if row['op_status'] == 1:
-                        if dev_mdls[0]['vals'][0] == models.SwitchAction.OFF:
+                        if dev_mdl['vals'][0] == models.SwitchAction.OFF:
                             await api_zb_device.OpSwitch(i['id'], True)
                 else:
-                    if dev_mdls[0]['vals'][0] == models.SwitchAction.ON:
+                    if dev_mdl['vals'][0] == models.SwitchAction.ON:
                         await api_zb_device.OpSwitch(i['id'], False)
             finally:
                 Release(i['id'])
