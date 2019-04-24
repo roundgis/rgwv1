@@ -175,10 +175,10 @@ async def AutoSync():
                 row = await api_core.BizDB.Get([sql_str1, [i['id']]])
                 if row:
                     if row['op_status'] == 1:
-                        if dev_mdl['vals'][0] == models.SwitchAction.OFF:
+                        if models.ZbDevice.ValsNotEmpty(dev_mdl) and dev_mdl['vals'][0] == models.SwitchAction.OFF:
                             await api_zb_device.OpSwitch(i['id'], True)
                 else:
-                    if dev_mdl['vals'][0] == models.SwitchAction.ON:
+                    if models.ZbDevice.ValsNotEmpty(dev_mdl) and dev_mdl['vals'][0] == models.SwitchAction.ON:
                         await api_zb_device.OpSwitch(i['id'], False)
             finally:
                 Release(i['id'])
