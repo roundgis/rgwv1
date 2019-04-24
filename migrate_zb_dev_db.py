@@ -10,6 +10,7 @@ def main(src_db, target_db):
             conn2.conn_obj.execute("BEGIN")
             models.ZbDevice.Init(conn2.conn_obj)
             for row in conn1.conn_obj.execute("select id,nid,moduleid,name,cts,device_no,remark from rxg_zb_device"):
+                print(row)
                 conn2.conn_obj.execute("insert or ignore into rgw_zb_device values(?,?,?,?,?,?,?)",
                                        (row[0],row[1],row[2],row[3],row[4],row[5],row[6]))
 
