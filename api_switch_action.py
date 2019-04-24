@@ -162,7 +162,7 @@ async def GetSuccOn(switchid):
 
 
 async def AutoSync():
-    sql_str = "select id from rgw_switch"
+    sql_str = "select r1.id id from rgw_switch r1 inner join rgw_zb_device r2 on r1.id=r2.id where r2.nid > 0"
     sql_str1 = "select switchid, op_status from rgw_switch_action where switchid=?"
     switches = await api_core.BizDB.Query([sql_str, []])
     validids = []

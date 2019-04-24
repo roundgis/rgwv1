@@ -15,7 +15,7 @@ def ListSensor():
                         r1.val_offset val_offset,
                         r1.data_no data_no,
                          COALESCE(r1.func_body,'') func_body
-                  from rgw_sensor r1 where r1.deviceid in (select id from rgw_zb_device where nid > 0)"""
+                  from rgw_sensor r1 inner join rgw_zb_device r2 on r1.deviceid=r2.id where r2.nid > 0"""
     return api_core.BizDB.Query([sql_str, []])
 
 
