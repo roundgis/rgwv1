@@ -1,4 +1,4 @@
-from twisted.internet import defer
+from twisted.python import log
 import models
 import api_core
 import rg_lib
@@ -274,7 +274,9 @@ class Module:
     @classmethod
     async def Backup(cls, moduleid):
         module_tbl = await api_rxg.XY.GetModule(moduleid)
+        log.msg(module_tbl)
         module_tbl['backup_data'] = await api_rxg.XY.BackupModule(moduleid)
+        log.msg(module_tbl)
         await cls.Upsert(models.ZbModule.Filter(module_tbl))
 
     @classmethod
