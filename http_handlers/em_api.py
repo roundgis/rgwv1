@@ -28,16 +28,16 @@ async def GetSwitch(req_handler, arg):
         await api_req_limit.CheckHTTP(req_handler)
         await api_auth.CheckRight(arg['token'])
         if "switchids" in arg:
-            sql_str = rg_lib.Sqlite.GenInClause("select id, name, iconid, tag, uts from rgw_switch where id in ",
+            sql_str = rg_lib.Sqlite.GenInClause("select r1.id, r1.name, r1.iconid, r1.tag, r1.uts, r2.nid from rgw_switch r1 left join rgw_zb_device r2 on r1.id=r2.id where r1.id in ",
                                                 arg['switchids'])
             sql_args = arg['switchids']
         else:
-            sql_str = "select id, name, iconid, tag, uts from rgw_switch"
+            sql_str = "select r1.id, r1.name, r1.iconid, r1.tag, r1.uts from rgw_switch r1 left join rgw_zb_device r2 on r1.id=r2.id"
             sql_args = []
         switches = await api_core.BizDB.Query([sql_str, sql_args])
         curr = rg_lib.DateTime.ts()
         for s in switches:
-            if (s['uts'] is None) or s['uts'] < (curr - 90):
+            if (s['uts'] is None) or (s['uts'] < (curr - 90)) or (s['nid'] is None) or (s['nid'] < 1):
                 s['status'] = rgw_consts.Network.OFFLINE
             else:
                 action = await api_switch_action.GetSuccOn(s['id'])
