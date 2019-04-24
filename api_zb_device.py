@@ -157,7 +157,7 @@ async def Reboot(deviceids):
     devs = await api_core.BizDB.Query([sql_str, deviceids])
     for dev in devs:
         try:
-            await api_rxg.XY.RebootDevice(dev['moduleid'], dev['id'])
+            await api_rxg.XY.RebootDevice(dev['moduleid'], dev['nid'])
         except rg_lib.RGError:
             pass
 
