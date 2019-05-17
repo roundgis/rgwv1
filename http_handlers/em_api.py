@@ -128,7 +128,7 @@ async def AddSchedule(req_handler, para):
         await api_auth.CheckRight(para['token'])
         temp = para['schedule']
         temp['second'] = 0
-        return __AddSchedule(temp)
+        return await __AddSchedule(temp)
     except Exception:
         rg_lib.Cyclone.HandleErrInException()
 
