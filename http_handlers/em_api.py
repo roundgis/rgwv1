@@ -48,7 +48,7 @@ async def GetSwitch(req_handler, arg):
         switches = await api_core.BizDB.Query([sql_str, sql_args])
         curr = rg_lib.DateTime.ts()
         for s in switches:
-            if (s['uts'] is None) or (s['uts'] < (curr - 90)) or (s['nid'] is None) or (s['nid'] < 1):
+            if (s['uts'] is None) or (s['uts'] < (curr - 61)) or (s['nid'] is None) or (s['nid'] < 1):
                 s['status'] = rgw_consts.Network.OFFLINE
             else:
                 action = await api_switch_action.GetSuccOn(s['id'])
