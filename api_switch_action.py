@@ -136,7 +136,7 @@ async def DoAction(dt_obj):
             action = await GetReadyOn(dt_obj, i['id'])
             if action:
                 dev_mdl = await api_zb_device.OpSwitch(action['switchid'], True)
-                if dev_mdl:
+                if models.ZbDevice.ValsNotEmpty(dev_mdl):
                     await UpdateNextStep(action['switchid'], rg_lib.DateTime.utc())
             action = await GetReadyOff(dt_obj, i['id'])
             if action:
@@ -168,17 +168,17 @@ async def AutoSync():
     validids = []
     for i in switches:
         dev_mdl = await api_zb_device.ReadVal(i['id'])
-        if models.ZbDevice.HasVals(dev_mdl):
+        if models.ZbDevice.ValsNotEmpty(dev_mdl):
             validids.append(i['id'])
             try:
                 await Acquire(i['id'])
                 row = await api_core.BizDB.Get([sql_str1, [i['id']]])
                 if row:
                     if row['op_status'] == 1:
-                        if models.ZbDevice.ValsNotEmpty(dev_mdl) and dev_mdl['vals'][0] == models.SwitchAction.OFF:
+                        if dev_mdl['vals'][0] == models.SwitchAction.OFF:
                             await api_zb_device.OpSwitch(i['id'], True)
                 else:
-                    if models.ZbDevice.ValsNotEmpty(dev_mdl) and dev_mdl['vals'][0] == models.SwitchAction.ON:
+                    if dev_mdl['vals'][0] == models.SwitchAction.ON:
                         await api_zb_device.OpSwitch(i['id'], False)
             finally:
                 Release(i['id'])
